@@ -1725,7 +1725,7 @@ public final class SQLiteDatabase extends SQLiteClosable {
      * Returns true if the new version code is greater than the current database version.
      *
      * @param newVersion The new version code.
-     * @return True if the new version code is greater than the current database version. 
+     * @return True if the new version code is greater than the current database version.
      */
     public boolean needUpgrade(int newVersion) {
         return newVersion > getVersion();
@@ -2200,5 +2200,35 @@ public final class SQLiteDatabase extends SQLiteClosable {
     private static long longForQuery(SQLiteStatement prog, String[] selectionArgs) {
         prog.bindAllArgsAsStrings(selectionArgs);
         return prog.simpleQueryForLong();
+    }
+
+    /**
+     * Returns the number of rows modified, inserted, or deleted by the most recent
+     * INSERT, UPDATE, or DELETE statement executed on this database connection.
+     *
+     * <p>This method internally executes the SQLite statement <code>SELECT changes()</code>
+     * to retrieve the count, which corresponds to the underlying SQLite
+     * {@code sqlite3_changes()} function.
+     *
+     * <p>Example usage:
+     * <pre>
+     *     long count = db.changedRowCount();
+     * </pre>
+     *
+     * @return the number of rows affected by the last modifying statement,
+     *         or 0 if no changes were made or an error occurred.
+     */
+    public long changedRowCount() {
+        long changes = 0;
+        SQLiteStatement stmt = null;
+        try {
+            stmt = compileStatement("SELECT changes()");
+            changes = stmt.simpleQueryForLong();
+        } catch (Exception e) {
+            LOG.e("SpatialiteDatabase", "Error getting changed row count", e);
+        } finally {
+            if (stmt != null) stmt.close();
+        }
+        return changes;
     }
 }
