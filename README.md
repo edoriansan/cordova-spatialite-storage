@@ -12,3 +12,7 @@ cordova plugin add https://github.com/DisyInformationssysteme/Cordova-spatialite
 ```
 
 See [releases page](https://github.com/DisyInformationssysteme/Cordova-spatialite-storage/releases) for available version tags.
+
+# Credits
+The newer Spatialite version used here is borrowed from:
+- https://github.com/ev-map/android-spatialite
